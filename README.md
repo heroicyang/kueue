@@ -40,28 +40,28 @@ import (
 )
 
 type TopicJob struct {
-  Topic *TopicStruct
+    Topic *TopicStruct
 }
 
 func (t *TopicJob) Perform() error {
-  // perform your job
-  return
+    // perform your job
+    return
 }
 
 func newTopicJob(payload *kueue.Payload) (kueue.Job, error) {
-  job := new(TopicJob)
+    job := new(TopicJob)
 
-  err := json.Unmarshal(payload.Body, &job.Topic)
+    err := json.Unmarshal(payload.Body, &job.Topic)
 
-  return job, err
+    return job, err
 }
 
 func main() {
-  worker := kueue.NewWorker()
+    worker := kueue.NewWorker()
 
-  consumer := kueue.NewConsumer("topic", "channel", 5, newTopicJob)
-  worker.AddConsumer(consumer)
+    consumer := kueue.NewConsumer("topic", "channel", 5, newTopicJob)
+    worker.AddConsumer(consumer)
 
-  worker.Startup()
+    worker.Startup(nsqlookupAddr)
 }
 ```
