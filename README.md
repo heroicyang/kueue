@@ -14,7 +14,7 @@ A simple producer&amp;consumer wrapper based on NSQ.
 
 ### Producers
 
-```golang
+```go
 import (
     "time"
 
@@ -32,7 +32,7 @@ kueue.Publish("delayedTopic", 1 * time.Hour, topicStruct)
 
 ### Consumers
 
-```golang
+```go
 import (
     "encoding/json"
 

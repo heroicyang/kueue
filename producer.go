@@ -3,8 +3,6 @@ package kueue
 import (
 	"encoding/json"
 	"math/rand"
-	"strconv"
-	"strings"
 	"time"
 
 	"github.com/bitly/go-nsq"
@@ -54,13 +52,6 @@ func MultiPublish(topic string, delay time.Duration, vs ...interface{}) (err err
 
 // Setup producers with the given nsqdAddr and poolSize.
 func SetupProducers(nsqdAddr string, poolSize int) (err error) {
-	hostPort := strings.Split(nsqdAddr, ":")
-	nsqdHostname := hostPort[0]
-	nsqdPort, err := strconv.Atoi(hostPort[1])
-	if err != nil {
-		nsqdPort = 5000
-	}
-
 	producerPool = make([]*nsq.Producer, 0)
 	producerPoolSize = 1
 
@@ -69,15 +60,13 @@ func SetupProducers(nsqdAddr string, poolSize int) (err error) {
 	}
 
 	for i := 0; i < producerPoolSize; i++ {
-		addr := nsqdHostname + ":" + strconv.Itoa(nsqdPort)
-		p, err := nsq.NewProducer(addr, nsq.NewConfig())
+		p, err := nsq.NewProducer(nsqdAddr, nsq.NewConfig())
 
 		if err != nil {
 			return err
 		}
 
 		producerPool = append(producerPool, p)
-		nsqdPort += 2
 	}
 
 	return
